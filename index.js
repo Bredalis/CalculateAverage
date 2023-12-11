@@ -1,15 +1,18 @@
+// Getting DOM elements by their IDs
 const content = document.getElementById("content"),
   addBtn = document.getElementById("add"),
   calculate = document.getElementById("calculate"),
   form = document.getElementById("form"),
   results = document.getElementById("results");
 
+// Initializing variables and arrays
 let btnRemove = document.getElementsByClassName("btnRemove"),
   count = 0,
   calculosNum = [],
   calculosDem = [],
   numerator = 0,
   denominator = 0,
+  // Array of input colors
   inputsColors = [
     "#3cc5f3",
     "#51bd7f",
@@ -25,9 +28,11 @@ let btnRemove = document.getElementsByClassName("btnRemove"),
     "#6c244b",
   ];
 
+// Adding event listeners
 addBtn.addEventListener("click", addItem);
 calculate.addEventListener("click", calculator);
 
+// Function to disable buttons and clean UI based on content
 function disableBtnSubmitANdClean() {
   if (content.innerHTML == "") {
     calculate.disabled = true;
@@ -36,14 +41,16 @@ function disableBtnSubmitANdClean() {
     calculate.disabled = false;
   }
 }
-disableBtnSubmitANdClean();
+disableBtnSubmitANdClean(); // Initial state
 
+// Function to add an item dynamically to the UI
 function addItem() {
   if (count <= 0) {
     count = 0;
   }
 
   count++;
+  // Creating HTML element for the item
   let element = `<div class="group">
     <h4>Materia</h4>
     <select class="controlSmall credit" name="credit${count}">
@@ -66,9 +73,12 @@ function addItem() {
       </select>
       <button class="btnRemove" onclick="removeItem(this)" type="button"><i class="fas fa-minus-square"></i></button>
     </div>`,
-    group = document.getElementsByClassName("group");
+    // Accessing the 'group' elements
+    let group = document.getElementsByClassName("group");
 
+    // Setting input borders with random colors
     if (group.length >= 0 ) {
+          // Adding a delay to show random colors
     setTimeout(() => {
         for (let key in group) {
           let randomColor = inputsColors[Math.floor(Math.random()*(inputsColors.length))]  
@@ -78,34 +88,41 @@ function addItem() {
         }
     }, 50);
   }
+  
+  // Alert if the item limit is reached, otherwise, add the item to the UI
   if (group.length > 11) {
     alert("You have raised the limit");
   } else {
     content.insertAdjacentHTML("beforeend", element);
   }
-  disableBtnSubmitANdClean();
+  disableBtnSubmitANdClean(); // Update button state
 }
 
+// Function to remove an item from the UI
 function removeItem(elem) {
   content.removeChild(elem.parentElement);
   disableBtnSubmitANdClean();
 }
 
+// Function to perform calculations based on user input
 function calculator() {
   calculosNum.splice(0, calculosNum.length);
   calculosDem.splice(0, calculosDem.length);
   numerator = 0;
   denominator = 0;
 
+  // Getting input elements
   let credit = document.getElementsByClassName("credit"),
     literal = document.getElementsByClassName("literal");
-
+  
+  // Calculating numerator and denominator based on input values
   for (let index = 0; index < credit.length; index++) {
     let numProd = credit[index].value * literal[index].value;
     calculosNum.push(numProd);
     calculosDem.push(+credit[index].value);
   }
-
+  
+  // Calculating the sum of numerator and denominator
   calculosNum.forEach((num) => {
     numerator = numerator + num;
   });
@@ -113,7 +130,7 @@ function calculator() {
   calculosDem.forEach((num) => {
     denominator = denominator + num;
   });
-
+  
   let val = 0;
   if (
     !denominator <= 0 ||
@@ -123,7 +140,9 @@ function calculator() {
     !numerator == undefined ||
     !numerator == NaN
   ) {
-    val = parseFloat(numerator / denominator).toFixed(2);
+
+    // Calculating and displaying results based on the calculated value
+    let val = parseFloat(numerator / denominator).toFixed(2);
     if (val >= 3 && val <= 4) {
       results.innerHTML = "<p class='result success'>" + val + "</p> ";
     }
@@ -139,6 +158,7 @@ function calculator() {
   }
 }
 
+// Preventing form submission
 form.onsubmit = (event) => {
   event.preventDefault();
 };
